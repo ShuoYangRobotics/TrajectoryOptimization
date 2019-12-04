@@ -1,0 +1,65 @@
+Robot Acrobot
+{
+    /*
+    * A fictitious kinematic chain, without branches.
+    * All the links are hollow cylinders infinitely thin (internal and external
+    * radii are the same) with radius equal to 0.05 meters, unit length, unit mass.
+    * They are connected by five joints: revolute, prismatic, revolute, prismatic,
+    * revolute.
+    */
+
+    RobotBase base0 {
+        inertia_properties {
+            mass = 1.0
+            CoM = (0.0, 0.0, 0.0)
+            Iy=0.0    Ix=0.0    Ixy=0.0    Iz=0.0    Ixz=0.0    Iyz=0.0
+        }
+        children {
+            link1 via jA
+        }
+    }
+
+    link link1 {
+        id = 1
+        inertia_properties {
+            mass = 1.0
+            CoM = (-0.5, .0, .0)
+            Ix=0.0025  Iy=0.33458  Iz=0.33458  Ixy=0.0  Ixz=0.0  Iyz=0.0
+        }
+        children {
+            link2 via jB
+        }
+    }
+
+    link link2 {
+        id = 5
+        inertia_properties {
+            mass = 1.0
+            CoM = (-0.5, .0, .0)
+            Ix=0.0025  Iy=0.33458  Iz=0.33458  Ixy=0.0  Ixz=0.0  Iyz=0.0
+        }
+        children {}
+        frames {
+        ee {
+            translation = (-1.0, 0.0, 0.0)
+            rotation    = (0.0, 0.0, 0.0)
+        }
+        }
+    }
+
+
+    r_joint jA {
+        ref_frame {
+            translation= (0.0, 0.0, 0.0)
+            rotation   = (0.0, PI/2.0, 0.0)
+        }
+    }
+
+    p_joint jB {
+        ref_frame {
+            translation= (-1.0, 0.0, 0.0)
+            rotation   = (0.0, 0.0, 0.0)
+        }
+    }
+
+}

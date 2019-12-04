@@ -1,0 +1,19 @@
+Robot Acrobot
+
+Frames {
+    fr_base0, fr_link1, fr_link2, 
+    fr_jA, fr_jB,
+    ee
+}
+
+Transforms
+{
+    fr_base0  <- ee
+    fr_jA     <- ee
+    fr_jB     <- ee
+}
+
+Jacobians
+{
+    base = fr_base0   target = ee
+}

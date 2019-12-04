@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+acrobot/build/
+
+acrobot/model/gen/cpp/build/

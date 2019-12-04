@@ -1,0 +1,9 @@
+fr_base0_X_ee(q_jA, q_jB) := Ry6d((%pi / 2)) . Rz6d(q_jA) . T6d([_k__tx_jB,0,0]) . T6d([0,0,q_jB]) . T6d([_k__tx_ee,0,0]);
+fr_jA_X_ee(q_jA, q_jB) := Rz6d(q_jA) . T6d([_k__tx_jB,0,0]) . T6d([0,0,q_jB]) . T6d([_k__tx_ee,0,0]);
+fr_jB_X_ee(q_jB) := T6d([0,0,q_jB]) . T6d([_k__tx_ee,0,0]);
+fr_base0_X_fr_jA() := Ry6d((%pi / 2));
+fr_base0_X_fr_jB(q_jA) := Ry6d((%pi / 2)) . Rz6d(q_jA) . T6d([_k__tx_jB,0,0]);
+fr_link1_X_fr_base0(q_jA) := Rz6d(-q_jA) . Ry6d((-%pi / 2));
+fr_base0_X_fr_link1(q_jA) := Ry6d((%pi / 2)) . Rz6d(q_jA);
+fr_link2_X_fr_link1(q_jB) := T6d([0,0,-q_jB]) . T6d([-_k__tx_jB,0,0]);
+fr_link1_X_fr_link2(q_jB) := T6d([_k__tx_jB,0,0]) . T6d([0,0,q_jB]);

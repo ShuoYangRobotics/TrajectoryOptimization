@@ -1,0 +1,5 @@
+ee_pos_wrt_fr_base0(q_jA, q_jB) := posVector(fr_base0_X_ee(q_jA, q_jB));
+fr_base0_J_ee(q_jA, q_jB) := addcol(matrix()
+	, GJacobianColumn(ee_pos_wrt_fr_base0(q_jA, q_jB), zaxis(fr_base0_X_fr_jA()), posVector(fr_base0_X_fr_jA()))
+	, GJacobianColumn_prism(zaxis(fr_base0_X_fr_jB(q_jA)))
+);
