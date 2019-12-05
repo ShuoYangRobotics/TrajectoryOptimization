@@ -19,7 +19,6 @@ iit::Acrobot::dyn::ForwardDynamics::ForwardDynamics(InertiaProperties& inertia, 
     link2_c.setZero();
 
     vcross.setZero();
-    Ia_p.setZero();
     Ia_r.setZero();
 
 }
@@ -51,11 +50,11 @@ void iit::Acrobot::dyn::ForwardDynamics::fd(
     // + Link link2
     //  - The spatial velocity:
     link2_v = (motionTransforms-> fr_link2_X_fr_link1) * link1_v;
-    link2_v(LZ) += qd(JB);
+    link2_v(AZ) += qd(JB);
     
     //  - The velocity-product acceleration term:
     motionCrossProductMx<Scalar>(link2_v, vcross);
-    link2_c = vcross.col(LZ) * qd(JB);
+    link2_c = vcross.col(AZ) * qd(JB);
     
     //  - The bias force term:
     link2_p += vxIv(link2_v, link2_AI);
@@ -66,13 +65,13 @@ void iit::Acrobot::dyn::ForwardDynamics::fd(
     Force pa;
     
     // + Link link2
-    link2_u = tau(JB) - link2_p(LZ);
-    link2_U = link2_AI.col(LZ);
-    link2_D = link2_U(LZ);
+    link2_u = tau(JB) - link2_p(AZ);
+    link2_U = link2_AI.col(AZ);
+    link2_D = link2_U(AZ);
     
-    compute_Ia_prismatic(link2_AI, link2_U, link2_D, Ia_p);  // same as: Ia_p = link2_AI - link2_U/link2_D * link2_U.transpose();
-    pa = link2_p + Ia_p * link2_c + link2_U * link2_u/link2_D;
-    ctransform_Ia_prismatic(Ia_p, motionTransforms-> fr_link2_X_fr_link1, IaB);
+    compute_Ia_revolute(link2_AI, link2_U, link2_D, Ia_r);  // same as: Ia_r = link2_AI - link2_U/link2_D * link2_U.transpose();
+    pa = link2_p + Ia_r * link2_c + link2_U * link2_u/link2_D;
+    ctransform_Ia_revolute(Ia_r, motionTransforms-> fr_link2_X_fr_link1, IaB);
     link1_AI += IaB;
     link1_p += (motionTransforms-> fr_link2_X_fr_link1).transpose() * pa;
     
@@ -90,7 +89,7 @@ void iit::Acrobot::dyn::ForwardDynamics::fd(
     
     link2_a = (motionTransforms-> fr_link2_X_fr_link1) * link1_a + link2_c;
     qdd(JB) = (link2_u - link2_U.dot(link2_a)) / link2_D;
-    link2_a(LZ) += qdd(JB);
+    link2_a(AZ) += qdd(JB);
     
     
 }

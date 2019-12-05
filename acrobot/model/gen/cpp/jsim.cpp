@@ -31,8 +31,8 @@ const iit::Acrobot::dyn::JSIM& iit::Acrobot::dyn::JSIM::update(const JointState&
     iit::rbd::transformInertia<Scalar>(link2_Ic, frcTransf -> fr_link1_X_fr_link2, Ic_spare);
     link1_Ic += Ic_spare;
 
-    F = link2_Ic.col(LZ);
-    DATA(JB, JB) = F(LZ);
+    F = link2_Ic.col(AZ);
+    DATA(JB, JB) = F(AZ);
 
     F = frcTransf -> fr_link1_X_fr_link2 * F;
     DATA(JB, JA) = F(AZ);
@@ -52,10 +52,10 @@ const iit::Acrobot::dyn::JSIM& iit::Acrobot::dyn::JSIM::update(const JointState&
 
 void iit::Acrobot::dyn::JSIM::computeL() {
     L = this -> triangularView<Eigen::Lower>();
-    // Joint jB, index 4 :
-    L(4, 4) = ScalarTraits::sqrt(L(4, 4));
-    L(4, 0) = L(4, 0) / L(4, 4);
-    L(0, 0) = L(0, 0) - L(4, 0) * L(4, 0);
+    // Joint jB, index 1 :
+    L(1, 1) = ScalarTraits::sqrt(L(1, 1));
+    L(1, 0) = L(1, 0) / L(1, 1);
+    L(0, 0) = L(0, 0) - L(1, 0) * L(1, 0);
     
     // Joint jA, index 0 :
     L(0, 0) = ScalarTraits::sqrt(L(0, 0));
@@ -66,14 +66,14 @@ void iit::Acrobot::dyn::JSIM::computeInverse() {
     computeLInverse();
 
     inverse(0, 0) =  + (Linv(0, 0) * Linv(0, 0));
-    inverse(4, 4) =  + (Linv(4, 0) * Linv(4, 0)) + (Linv(4, 4) * Linv(4, 4));
-    inverse(4, 0) =  + (Linv(4, 0) * Linv(0, 0));
-    inverse(0, 4) = inverse(4, 0);
+    inverse(1, 1) =  + (Linv(1, 0) * Linv(1, 0)) + (Linv(1, 1) * Linv(1, 1));
+    inverse(1, 0) =  + (Linv(1, 0) * Linv(0, 0));
+    inverse(0, 1) = inverse(1, 0);
 }
 
 void iit::Acrobot::dyn::JSIM::computeLInverse() {
     //assumes L has been computed already
     Linv(0, 0) = 1 / L(0, 0);
-    Linv(4, 4) = 1 / L(4, 4);
-    Linv(4, 0) = - Linv(0, 0) * ((Linv(4, 4) * L(4, 0)) + 0);
+    Linv(1, 1) = 1 / L(1, 1);
+    Linv(1, 0) = - Linv(0, 0) * ((Linv(1, 1) * L(1, 0)) + 0);
 }

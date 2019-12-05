@@ -1,6 +1,31 @@
 {
     "files.associations": {
         "dense": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "core": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "cstdarg": "cpp",
+        "cstddef": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "cstdint": "cpp",
+        "exception": "cpp",
+        "initializer_list": "cpp",
+        "new": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "memory_resource": "cpp",
+        "random": "cpp",
+        "utility": "cpp",
+        "__config": "cpp",
+        "stdexcept": "cpp",
+        "condition_variable": "cpp",
+        "thread": "cpp"
     }
 }

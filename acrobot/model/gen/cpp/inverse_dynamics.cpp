@@ -59,11 +59,11 @@ void iit::Acrobot::dyn::InverseDynamics::C_terms(JointState& jForces, const Join
     
     // Link 'link2'
     link2_v = ((xm->fr_link2_X_fr_link1) * link1_v);
-    link2_v(iit::rbd::LZ) += qd(JB);
+    link2_v(iit::rbd::AZ) += qd(JB);
     
     motionCrossProductMx<Scalar>(link2_v, vcross);
     
-    link2_a = (vcross.col(iit::rbd::LZ) * qd(JB));
+    link2_a = (vcross.col(iit::rbd::AZ) * qd(JB));
     
     link2_f = link2_I * link2_a + vxIv(link2_v, link2_I);
     
@@ -83,12 +83,12 @@ void iit::Acrobot::dyn::InverseDynamics::firstPass(const JointState& qd, const J
     
     // First pass, link 'link2'
     link2_v = ((xm->fr_link2_X_fr_link1) * link1_v);
-    link2_v(iit::rbd::LZ) += qd(JB);
+    link2_v(iit::rbd::AZ) += qd(JB);
     
     motionCrossProductMx<Scalar>(link2_v, vcross);
     
-    link2_a = (xm->fr_link2_X_fr_link1) * link1_a + vcross.col(iit::rbd::LZ) * qd(JB);
-    link2_a(iit::rbd::LZ) += qdd(JB);
+    link2_a = (xm->fr_link2_X_fr_link1) * link1_a + vcross.col(iit::rbd::AZ) * qd(JB);
+    link2_a(iit::rbd::AZ) += qdd(JB);
     
     link2_f = link2_I * link2_a + vxIv(link2_v, link2_I) - fext[LINK2];
     
@@ -97,7 +97,7 @@ void iit::Acrobot::dyn::InverseDynamics::firstPass(const JointState& qd, const J
 void iit::Acrobot::dyn::InverseDynamics::secondPass(JointState& jForces)
 {
     // Link 'link2'
-    jForces(JB) = link2_f(iit::rbd::LZ);
+    jForces(JB) = link2_f(iit::rbd::AZ);
     link1_f += xm->fr_link2_X_fr_link1.transpose() * link2_f;
     // Link 'link1'
     jForces(JA) = link1_f(iit::rbd::AZ);

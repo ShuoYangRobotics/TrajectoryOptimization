@@ -65,7 +65,6 @@ private:
     MotionTransforms* motionTransforms;
 
     Matrix66 vcross; // support variable
-    Matrix66 Ia_p;   // support variable, articulated inertia in the case of a prismatic joint
     Matrix66 Ia_r;   // support variable, articulated inertia in the case of a revolute joint
 
     // Link 'link1' :
