@@ -23,7 +23,7 @@ Robot Acrobot
         id = 1
         inertia_properties {
             mass = 1.0
-            CoM = (-0.5, .0, .0)
+            CoM = (0.5, .0, .0)
             Ix=0.0025  Iy=0.33458  Iz=0.33458  Ixy=0.0  Ixz=0.0  Iyz=0.0
         }
         children {
@@ -32,16 +32,16 @@ Robot Acrobot
     }
 
     link link2 {
-        id = 5
+        id = 2
         inertia_properties {
             mass = 1.0
-            CoM = (-0.5, .0, .0)
+            CoM = (0.5, .0, .0)
             Ix=0.0025  Iy=0.33458  Iz=0.33458  Ixy=0.0  Ixz=0.0  Iyz=0.0
         }
         children {}
         frames {
         ee {
-            translation = (-1.0, 0.0, 0.0)
+            translation = (1.0, 0.0, 0.0)
             rotation    = (0.0, 0.0, 0.0)
         }
         }
@@ -55,9 +55,9 @@ Robot Acrobot
         }
     }
 
-    p_joint jB {
+    r_joint jB {
         ref_frame {
-            translation= (-1.0, 0.0, 0.0)
+            translation= (1.0, 0.0, 0.0)
             rotation   = (0.0, 0.0, 0.0)
         }
     }
