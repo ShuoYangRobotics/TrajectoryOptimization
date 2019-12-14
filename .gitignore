@@ -34,3 +34,5 @@
 acrobot/build/
 
 acrobot/model/gen/cpp/build/
+
+ifopt/ifopt_test/build/
