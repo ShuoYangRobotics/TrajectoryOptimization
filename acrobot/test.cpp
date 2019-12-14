@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     dq = Eigen::Vector2d(M_PI/3, M_PI/3);
     std::cout << "Jacobian  - " << std::endl << J.fr_base0_J_ee(q) << std::endl;
 
-    // according to acrobot_rod.nb test, this J is analytical jacobian
+    // according to acrobot_rod.nb test, this J is direct differentiate jacobian
     Eigen::VectorXd ee_vel_body = J.fr_base0_J_ee(q)*dq;
     std::cout << "Jacobian*dq  - " << std::endl << ee_vel_body << std::endl;
     
