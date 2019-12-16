@@ -15,7 +15,7 @@ p.miu = 0.4;
 p.xc = 0.1;
 p.yc = -0.95;
 p.r  = 0.3;
-dt = 0.01;
+dt = 0.005;
 
 
 state = [sqke1;sqke2;sqke3;
@@ -57,15 +57,14 @@ phi = wheelConstraint([sqk;sdqk],p);
              % 12-11 I thought Prof Posa made a mistake here, then I found
              % it it correct
 ceq_part = [sqk-sqk1+dt*sdqk1;  %dim3
+    
             M*(sdqk1(1:2)-sdqk(1:2))+dt*(C*sdqk1(1:2)+G-[u1k1;u2k1]-Jb'*(lambda_tk1)); %dim2
-            (1/2*p.m3*p.r^2)*(sdqk1(3)-sdqk(3))-dt*(lambda_ck1(1)*p.r) %dim1
-            phi*c3k;
+            
+            (1/2*p.m3*p.r^2)*(sdqk1(3)-sdqk(3))-dt*(lambda_ck1(1)*p.r)]; %dim1
             % 12-11 I thought this should be c3k-c1k-c2k, later I found it
-            % is correct
-            (p.miu*c3k-c1k-c2k)*slackk;
-            (slackk+diffV)*c1k;
-            (slackk-diffV)*c2k];  
-        
+            % is correct];  
+            
+% 12-12 use the trick 23-25 in Posa's paper        
 c_part = [-phi;                                                            %dim1
           -c1k;
           -c2k;
@@ -73,7 +72,11 @@ c_part = [-phi;                                                            %dim1
           -slackk;%dim4
           -(p.miu*c3k-c1k-c2k);  %dim1
           -(slackk+diffV);                                     %dim1
-          -(slackk-diffV)]; %dim1
+          -(slackk-diffV);
+          phi*c3k;
+          (p.miu*c3k-c1k-c2k)*slackk;
+          (slackk+diffV)*c1k;
+          (slackk-diffV)*c2k]; 
       
 
 [ceq, ceqi, ceqz, ceqzi, ceqzd] = computeGradients(ceq_part,state,empty); 
