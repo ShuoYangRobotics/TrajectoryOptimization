@@ -2,6 +2,7 @@ syms sqke1 sqke2 sqke3 sdqke1  sdqke2 sdqke3 sqk1e1 sqk1e2 sqk1e3  sdqk1e1 sdqk1
 syms u1k1 u2k1 real
 syms c1k c2k c3k slackk real
 syms c1k1 c2k1 c3k1 slackk1 real
+syms dt real
 empty = sym('empty','real');
 
 % need to derive again when these changes
@@ -15,7 +16,6 @@ p.miu = 0.4;
 p.xc = 0.1;
 p.yc = -0.95;
 p.r  = 0.3;
-dt = 0.005;
 
 
 state = [sqke1;sqke2;sqke3;
@@ -73,21 +73,21 @@ c_part = [-phi;                                                            %dim1
           -(p.miu*c3k-c1k-c2k);  %dim1
           -(slackk+diffV);                                     %dim1
           -(slackk-diffV);
-          phi*c3k;
-          (p.miu*c3k-c1k-c2k)*slackk;
-          (slackk+diffV)*c1k;
-          (slackk-diffV)*c2k]; 
+          100*phi*c3k;
+          100*(p.miu*c3k-c1k-c2k)*slackk;
+          100*(slackk+diffV)*c1k;
+          100*(slackk-diffV)*c2k]; 
       
 
-[ceq, ceqi, ceqz, ceqzi, ceqzd] = computeGradients(ceq_part,state,empty); 
-[c, ci, cz, czi, czd] = computeGradients(c_part,state,empty);  
+[ceq, ceqi, ceqz, ceqzi, ceqzd] = computeGradients(ceq_part, state, empty); 
+[  c,   ci,   cz,   czi,   czd] = computeGradients(c_part,   state, empty);  
 
 % Write function file:
 matlabFunction(ceq, ceqi,...   %dynamics
     ceqz, ceqzi, ceqzd, ...  %gradients
     'file','autoGen_ceq_grad.m',...
     'vars',{...
-    'sqke1', 'sqke2', 'sqke3'...
+    'dt','sqke1', 'sqke2', 'sqke3'...
     'sdqke1', 'sdqke2', 'sdqke3'...
     'sqk1e1', 'sqk1e2', 'sqk1e3'...
     'sdqk1e1', 'sdqk1e2', 'sdqk1e3'...
@@ -99,7 +99,7 @@ matlabFunction(c, ci,...   %dynamics
     cz, czi, czd, ...  %gradients
     'file','autoGen_c_grad.m',...
     'vars',{...
-    'sqke1', 'sqke2', 'sqke3'...
+    'dt','sqke1', 'sqke2', 'sqke3'...
     'sdqke1', 'sdqke2', 'sdqke3'...
     'sqk1e1', 'sqk1e2', 'sqk1e3'...
     'sdqk1e1', 'sdqk1e2', 'sdqk1e3'...

@@ -57,27 +57,29 @@ nControl = 2;          % two actuation
 nContactForce = 4;     % lambda_x  lambda_x-  lambda_z slack
 nZ = nState*nGrid + nControl*nGrid + nContactForce*nGrid;  % dimension of decision variable
 stateIdx = 1:nState*nGrid;
-controlIdx = nState*nGrid+1:nState*nGrid + nControl*nGrid;
-forceIdx = nState*nGrid+nControl*nGrid+1:nZ;
+controlIdx = nState*nGrid+1:(nState*nGrid + nControl*nGrid);
+forceIdx = (nState*nGrid+nControl*nGrid+1):nZ;
 %%
 
 
 % construct a initial value
-% zInit = zeros(nZ,1);
-% % nowheelxF = xF; nowheelxF(3) = x0(3);
-% % guess_mid = [3*pi/6;-pi/1.4;x0(3);0;0;0];
-% % 
-% linearInterpolate = interp1([0  1],[x0 xF]',time);
-% zInit(stateIdx) = linearInterpolate';
+zInit = zeros(nZ,1);
+% nowheelxF = xF; nowheelxF(3) = x0(3);
+guess_mid = [    1.0983
+   -1.6320;0.3110;0;0;0];
+% 
+linearInterpolate = interp1([0 0.5 1],[x0 guess_mid xF]',time);
+zInit(stateIdx) = linearInterpolate';
 % % simple strategy for calculating control
 % % for i = 1:nGrid
 % %     zInit(nState*nGrid+1+(i-1)*nControl:nState*nGrid+1+(i-1)*nControl+1) = flickingFingerForwardDynamics(linearInterpolate(:,i),dyn);
 % % end
 
 % %% construct a initial value using previous no wheel rotation trajectory
-load('counterclkwheelrotate_1214_with_new_cst.mat')
-zInit = zSoln;
+% load('nowheelrotate.mat')
+% zInit = zSoln;
 
+%%
 % construct a fmincon problem 
 problem.objective = @(z) (robotObj(dt,z,x0,xF,nGrid,nState,nControl,nContactForce));
 problem.x0 = zInit;
@@ -86,20 +88,59 @@ problem.lb = [];
 problem.ub = [];
 problem.solver = 'fmincon';
 % % problem.options = optimoptions('fmincon','Display','iter','Algorithm','sqp','MaxFunctionEvaluations', 1e5);
-problem.options = optimoptions('fmincon','Display','iter','OptimalityTolerance', 1e-4,'MaxFunctionEvaluations', 4e5,'SpecifyConstraintGradient',true,'StepTolerance',1e-6);
+problem.options = optimoptions('fmincon','Display','iter','OptimalityTolerance', 1e-6,'MaxFunctionEvaluations', 4e5,'SpecifyConstraintGradient',true,'SpecifyObjectiveGradient',true','StepTolerance',1e-6);
 % problem.nonlcon = @(z) (robotConstraint_hermitesimpson(dt,reshape(z(stateIdx),nState,nGrid), reshape(z(controlIdx),nControl,nGrid),@robotDynamics,x0,xF));
 problem.nonlcon = @(z) (robotConstraint_trapazoid(dt,z,x0,xF,nGrid,nState,nControl,nContactForce,dyn));
 
+
+options.screen = 'on';
+options.printfile = 'toymin.out';
+options.specsfile = which('sntoy.spc');
+options.name = 'toyprob';
+options.stop = @toySTOP;
+
 tic;
-[zSoln, objVal,exitFlag,output] = fmincon(problem);
+% [zSoln, objVal,exitFlag,output] = fmincon(problem);
+
+[zSoln,fval,INFO,output,lambda,states] = snsolve(@problem.objective, ...
+    problem.x0, problem.Aineq, problem.bineq, problem.Aeq, problem.beq, problem.lb, problem.ub, ...
+					     @problem.nonlcon, options);
+
 nlpTime = toc
 
-% xSoln = reshape(zSoln,nState+nControl+nContactForce,nGrid);
+%% visualize result
+xSoln = reshape(zSoln,nState+nControl+nContactForce,nGrid);
+% reshape solution
 xSoln = [reshape(zSoln(stateIdx),nState,nGrid);
          reshape(zSoln(controlIdx),nControl,nGrid);
          reshape(zSoln(forceIdx),nContactForce,nGrid)];
+% draw using animate tool
 A.plotFunc = @(t,z)( drawFlickingFinger(t,z,dyn,x0,xF) );
 A.speed = 0.1;
 A.figNum = 101;
 animate(time(:,1:end-1),xSoln(:,1:end-1),A)
-save('counterclkwheelrotate_1214_with_new_cst.mat','zSoln','objVal')
+% 
+% % plot trajectories
+% state_soln = reshape(zSoln(stateIdx),nState,nGrid);
+% ctrl_soln = reshape(zSoln(controlIdx),nControl,nGrid);
+% contact_soln = reshape(zSoln(forceIdx),nContactForce,nGrid);
+% 
+% % run system dynamics using control again
+% figure('WindowState', 'maximized')
+% subplot(3,3,1);
+% plot(state_soln(1,:),nGrid);
+
+
+save('counterclkwheelrotate_1216_with_new_obj.mat','zSoln','objVal')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [iAbort] = toySTOP(itn, nMajor, nMinor, condZHZ, obj, merit, step, ...
+			      primalInf, dualInf, maxViol, maxViolRel, ...
+			      x, xlow, xupp, xmul, xstate, ...
+			      F, Flow, Fupp, Fmul, Fstate)
+
+% Called every major iteration
+% Use iAbort to stop SNOPT (if iAbort == 0, continue; else stop)
+
+iAbort = 0;
+end
