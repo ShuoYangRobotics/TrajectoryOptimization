@@ -14,10 +14,10 @@ xSoln = [reshape(zSoln(stateIdx),nState,nGrid);
          reshape(zSoln(controlIdx),nControl,nGrid);
          reshape(zSoln(forceIdx),nContactForce,nGrid)];
 % draw using animate tool
-% A.plotFunc = @(t,z)( drawFlickingFinger(t,z,dyn,x0,xF) );
-% A.speed = 0.1;
-% A.figNum = 101;
-% animate(time(:,1:end-1),xSoln(:,1:end-1),A)
+A.plotFunc = @(t,z)( drawFlickingFinger(t,z,dyn,x0,xF) );
+A.speed = 0.2;
+A.figNum = 101;
+animate(time(:,1:end),xSoln(:,1:end),A)
 
 % plot trajectories
 state_soln = reshape(zSoln(stateIdx),nState,nGrid);

@@ -27,7 +27,7 @@ tF = 2;  %For now, force it to take exactly this much time.
 q0 = [pi/4;-pi/1.5;0];   %[q1;q2;q3];  %iitial angles   %Stable equilibrium
 dq0 = [0;0;0];   %[dq1;dq2;dq3];  %initial angle rates
 
-qF = [2.7*pi/6;-pi/2.7;pi/5];  %[q1;q2;q3];  %final angles    %Inverted balance
+qF = [2.7*pi/6;-pi/2.7;pi/2];  %[q1;q2;q3];  %final angles    %Inverted balance
 dqF = [0;0;0];  %[dq1;dq2;dq3];  %final angle ratesx
 
 x0 = [q0;dq0];
@@ -121,9 +121,9 @@ A.figNum = 101;
 animate(time(:,1:end),xSoln(:,1:end),A)
 % 
 % % plot trajectories
-% state_soln = reshape(zSoln(stateIdx),nState,nGrid);
-% ctrl_soln = reshape(zSoln(controlIdx),nControl,nGrid);
-% contact_soln = reshape(zSoln(forceIdx),nContactForce,nGrid);
+state_soln = reshape(zSoln(stateIdx),nState,nGrid);
+ctrl_soln = reshape(zSoln(controlIdx),nControl,nGrid);
+contact_soln = reshape(zSoln(forceIdx),nContactForce,nGrid);
 % 
 % % run system dynamics using control again
 % figure('WindowState', 'maximized')
