@@ -10,11 +10,12 @@ u = reshape(z(controlIdx),nControl,nGrid);
 contact = reshape(z(forceIdx),nContactForce,nGrid);
 
 % minimize final state difference
-state_diff = 600*(x(:,end)-xF);
+state_diff = diag([60;60;500])*(x(1:3,end)-xF(1:3));
 
-J = (state_diff'*state_diff);
+% J = (state_diff'*state_diff);
+J = 0;
 GJ = zeros(1,nZ);
-GJ(nState*nGrid-5:nState*nGrid) = 2*600^2*(x(:,end)-xF);
+% GJ(nState*nGrid-5:nState*nGrid-3) = 2*diag([60;60;500]).^2*(x(1:3,end)-xF(1:3));
 
 
 for idxLow = 1:(nGrid-1)
@@ -37,5 +38,5 @@ for idxLow = 1:(nGrid-1)
         
     GJ(idx) = GJ(idx) + k;
 end
-GJ = GJ';
+% GJ = GJ';
 end

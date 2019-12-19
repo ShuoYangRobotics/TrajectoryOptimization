@@ -11,6 +11,8 @@ My initial plan would be implement paper "trajectory optimization with implicit 
 ## acrobot
 First system: acrobot with direct collocation
 
+Need to run "~/optimization/robcogen/robcogen-0.5.1/etc/cpp-iitrbd/install.sh" first
+
 acrobot/model/run.sh contains a script that runs RobCoGen, copy the output to current folder and install necessary robot header and .so into /usr/local/include
 
 RobCoGen has an option to generate URDF model, but the output model does not have visual component.

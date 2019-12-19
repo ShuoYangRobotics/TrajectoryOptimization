@@ -323,6 +323,7 @@ elseif nargin >= 9 && nargin <= 12,
   nonlcon  = checkFun(nonlc,'SNOPT','nonlcon');
 
   gotDeriv = 0;
+  
   try
     [c,ceq,J,Jeq] = nonlcon(x0);
     J = J';  Jeq = Jeq';
@@ -460,7 +461,7 @@ if nargin == 9,
 end
 
 F = [  fobj; c; ceq ];
-G = [ gobj'; J; Jeq ];
+G = [  gobj; J'; Jeq' ];
 
 % Convert G to vector format to match SNOPTA and (iGfun,jGvar)
 [~,n] = size(G);

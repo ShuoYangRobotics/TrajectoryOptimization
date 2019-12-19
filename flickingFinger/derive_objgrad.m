@@ -15,12 +15,12 @@ state = [sqke1;sqke2;sqke3;          %3
          c1k1;c2k1;c3k1;slackk1];    %4
      
      
-J_part = 0.5*dt*(u1k^2+u2k^2+u1k1^2+u2k1^2);
+J_part = 0.0001*0.5*dt*(u1k^2+u2k^2+u1k1^2+u2k1^2);
 
 force_z_diff = ((c3k1-c3k)/dt);
 force_x_diff = (((c1k1-c2k1)-(c1k-c2k))/dt);
 
-% J_part = J_part + 0.1*force_z_diff*force_z_diff + 0.1*force_x_diff*force_x_diff;
+J_part = J_part + 0.01*force_z_diff*force_z_diff + 0.01*force_x_diff*force_x_diff;
 
 
 [jeq, jeqi, jeqz, jeqzi, jeqzd] = computeGradients(J_part, state, empty); 

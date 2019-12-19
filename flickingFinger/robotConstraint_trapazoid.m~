@@ -11,7 +11,7 @@ contact = reshape(z(forceIdx),nContactForce,nGrid);
 
 dim_boundary_cst = 9;
 dim_ceq = 6;
-dim_c = 12;
+dim_c = 6;
 
 % ceq = zeros(6+(nGrid-1)*dim_ceq,1);
 ceq = zeros(dim_boundary_cst+(nGrid-1)*dim_ceq,1);
@@ -80,16 +80,13 @@ dqk1 = x(4:6,idFinal);
                                    dqk(1),dqk(2),dqk(3),...
                                    qk1(1),qk1(2),qk1(3),...
                                    dqk1(1),dqk1(2),dqk1(3),...
-                                   u(1,idFinal),u(2,idFinal),...
-                                   contact(1,idFinal),contact(2,idFinal),contact(3,idFinal),contact(4,idFinal),...
-                                   contact(1,idFinal),contact(2,idFinal),contact(3,idFinal),contact(4,idFinal),0);
-c((idFinal-1)*dim_c+1:(idFinal-1)*dim_c+dim_c) = pc;
-idx = [nState*(idFinal-1)+1:nState*idFinal  nState*nGrid+nControl*(idFinal-1)+1:nState*nGrid+nControl*idFinal nState*nGrid+nControl*nGrid+nContactForce*(idFinal-1)+1:nState*nGrid+nControl*nGrid+nContactForce*idFinal];
-k2 = zeros(dim_c,22);
-k2(pczi) = real(pcz);
-k2 = k2(:,[1:6,13:14,15:18]);
-gc(idx,(idFinal-1)*dim_c+1:(idFinal-1)*dim_c+dim_c) = k2';
+                                   u(1,idxUpp),u(2,idxUpp),...
+                                   contact(1,idxLow),contact(2,idxLow),contact(3,idxLow),contact(4,idxLow),...
+                                   contact(1,idxUpp),contact(2,idxUpp),contact(3,idxUpp),contact(4,idxUpp),0);
+c((idxUpp-1)*dim_c+1:(idxUpp-1)*dim_c+dim_c) = pc;
     
-% gceq = gceq';
-% gc = gc';
+    
+
+gceq = gceq';
+gc = gc';
 end

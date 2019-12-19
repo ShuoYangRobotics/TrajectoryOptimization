@@ -3,7 +3,7 @@ addpath ../../
 % must run MAIN First
 
 % load zSoln from a dataset 
-load('counterclkwheelrotate_1216_with_new_obj.mat')
+load('counterclkwheelrotate_1218_xF_back_as_cst.mat')
 % load('counterclkwheelrotate_1216_with_new_obj.mat')
 % load('counterclkwheelrotate_1216_with_new_obj.mat')
 
@@ -25,28 +25,36 @@ ctrl_soln = reshape(zSoln(controlIdx),nControl,nGrid);
 contact_soln = reshape(zSoln(forceIdx),nContactForce,nGrid);
 
 %% solution ceq and c
-ceq = zeros(6+(nGrid-1)*6,1);
-c   = zeros((nGrid-1)*12,1);
-gceq = zeros(nZ,6+(nGrid-1)*6);
-gc = zeros(nZ,(nGrid-1)*12);
+dim_boundary_cst = 9;
+dim_ceq = 6;
+dim_c = 6;
+
+% ceq = zeros(6+(nGrid-1)*dim_ceq,1);
+ceq = zeros(dim_boundary_cst+(nGrid-1)*dim_ceq,1);
+c   = zeros((nGrid-1)*dim_c,1);
+
+gceq = zeros(nZ,dim_boundary_cst+(nGrid-1)*dim_ceq);
+gc = zeros(nZ,(nGrid-1)*dim_c);
+
 
 ceq(1:6) = (state_soln(:,1)-x0).^2;
-% ceq(7:12) = (x(:,end)-xF).^2;
+ceq(7:9) = (state_soln(1:3,end)-xF(1:3)).^2;
 gceq(1:6,1:6) = diag((2*(state_soln(:,1)-x0)));
-%     gceq(nState*(nGrid-1)+1:nState*nGrid,7:12) = diag(2*(x(:,end)-xF));
+gceq(nState*(nGrid-1)+1:nState*(nGrid-1)+3,7:9) = diag(2*(state_soln(1:3,end)-xF(1:3)));
 
-idxUpp = 25
+
+idxUpp = nGrid
 idxCur = idxUpp - 1
 idxLow = idxUpp - 2
 
 qk1    = state_soln(1:3,idxLow)
 dqk1   = state_soln(4:6,idxLow)
 
-qk2  = state_soln(1:3,idxCur);
-dqk2 = state_soln(4:6,idxCur); 
+qk2  = state_soln(1:3,idxCur)
+dqk2 = state_soln(4:6,idxCur) 
 
-qk3  = state_soln(1:3,idxUpp);
-dqk3 = state_soln(4:6,idxUpp);  
+qk3  = state_soln(1:3,idxUpp)
+dqk3 = state_soln(4:6,idxUpp)
 
 state_cst1  = [qk2;dqk2;qk1;dqk1;ctrl_soln(:,idxCur);contact_soln(:,idxLow);contact_soln(:,idxCur)];
 state_cst2  = [qk3;dqk3;qk2;dqk2;ctrl_soln(:,idxUpp);contact_soln(:,idxCur);contact_soln(:,idxUpp)];
@@ -91,8 +99,8 @@ state_cst2  = [qk3;dqk3;qk2;dqk2;ctrl_soln(:,idxUpp);contact_soln(:,idxCur);cont
 %     size(pc)
   
                                         
-ceq(6+(idxUpp-2)*6+1:6+(idxUpp-2)*6+6) = pceq1;  
-c((idxUpp-2)*12+1:(idxUpp-2)*12+12) = pc1;
+% ceq(6+(idxUpp-2)*6+1:6+(idxUpp-2)*6+6) = pceq1;  
+% c((idxUpp-2)*12+1:(idxUpp-2)*12+12) = pc1;
 
 % assemble idices 
 % idx = [nState*(idxLow-1)+1:nState*idxUpp  nState*nGrid+nControl*(idxLow-1)+1:nState*nGrid+nControl*idxLow nState*nGrid+nControl*nGrid+nContactForce*(idxLow-1)+1:nState*nGrid+nControl*nGrid+nContactForce*idxUpp];

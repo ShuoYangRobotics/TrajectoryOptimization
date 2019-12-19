@@ -76,7 +76,7 @@ forceIdx = (nState*nGrid+nControl*nGrid+1):nZ;
 % end
 
 % %% construct a initial value using previous no wheel rotation trajectory
-load('counterclkwheelrotate_1218_full_cst_min_force_snopt.mat')
+load('counterclkwheelrotate_1218_xF_back_as_cst_full_cst_snopt.mat')
 zInit = zSoln;
 
 %%
@@ -100,11 +100,11 @@ options.name = 'toyprob';
 options.stop = @toySTOP;
 
 tic;
-[zSoln, objVal,exitFlag,output] = fmincon(problem);
+% [zSoln, objVal,exitFlag,output] = fmincon(problem);
 
-% [zSoln,fval,INFO,output,lambda,states] = snsolve(@problem.objective, ...
-%     problem.x0, problem.Aineq, problem.bineq, problem.Aeq, problem.beq, problem.lb, problem.ub, ...
-% 					     @problem.nonlcon, options);
+[zSoln,fval,INFO,output,lambda,states] = snsolve(@problem.objective, ...
+    problem.x0, problem.Aineq, problem.bineq, problem.Aeq, problem.beq, problem.lb, problem.ub, ...
+					     @problem.nonlcon, options);
 
 nlpTime = toc
 
@@ -131,7 +131,7 @@ animate(time(:,1:end),xSoln(:,1:end),A)
 % plot(state_soln(1,:),nGrid);
 
 
-save('counterclkwheelrotate_1218_full_cst_min_force_fmincon.mat','zSoln','fval')
+save('counterclkwheelrotate_1218_full_cst_snopt.mat','zSoln','fval')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [iAbort] = toySTOP(itn, nMajor, nMinor, condZHZ, obj, merit, step, ...
